@@ -1,0 +1,117 @@
+/* header & footer */
+@charset "UTF-8";
+
+.headerTopDiv {
+	background-color: #555;
+	padding : 10px;
+	position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.topIcon {
+	width:  165px;
+}
+
+.headerSearchDiv {
+	width:60%;
+}
+.searchText {
+	height:30px;
+	width:60%;
+}
+.searchButton {
+	height:40px;
+	border-radius:5px;
+	background: url(../img/search.jpg)
+}
+
+.headerCartDiv {
+	position:absolute;
+	right:10px;
+	top:10px;
+}
+.headerCartDiv a {
+	display: block;
+}
+.headerCartDiv a span.minicartQuantity {
+	display: none;
+	background: #39f;
+  border: 1px solid #39f;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 16px;
+  width: 18px;
+  height: 16px;
+  text-align: center;
+  position: absolute;
+  top: -5px;
+  left: -10px;
+  padding: 2px;
+}
+.headerCartDiv a span.minicartQuantity.active {
+	display: inline-block;
+}
+.headerCartDiv a img.cartIcon {
+	width:  30px;
+	height: 30px;
+}
+.headerCartDiv .minicartContent {
+  /* display: none; */
+  max-width: 320px;
+  width: 320px;
+	background-color: #fff;
+  box-shadow: none;
+  border: 1px solid #ccc;
+  position: absolute;
+	top: 1.4em;
+  right: 0;
+}
+.headerCartDiv .minicartProducts {
+  max-height: 360px;
+  padding: .5em;
+  overflow: auto;
+}
+.headerCartDiv .minicartImage {
+  float: left;
+  width: 50%;
+}
+.headerCartDiv .minicartImage img {
+  width: 100%;
+}
+h2.primaryLogo {
+  text-align: center;
+  padding: 0;
+	margin-top: 60px;
+}
+
+footer {
+	bottom: 0;
+  left: 0;
+  position: relative;
+  right: 0;
+	margin-top: 40px;
+}
+.footerInnerDiv {
+	background-color: #e5e5e5;
+	padding : 10px;
+}
+.footerInnerDiv ul.links li {
+  width: 48%;
+	margin-top: 10px;
+	padding-bottom: 10px;
+  display: inline-block;
+	border-bottom: 1px solid #aaa;
+	color: #222;
+}
+.footerInnerDiv ul.links li:nth-child(2n+1) {
+	margin-right: 2%;
+}
+.footerInnerDiv ul.links li a {
+	text-decoration-line: none;
+	position: relative;
+}
+.footerInnerDiv ul.links .arrow_right-right::before {
+  border-top: 1px solid #222;
+  border-right: 1px solid #222;
+}
