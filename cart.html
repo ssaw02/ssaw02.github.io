@@ -2,71 +2,47 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
-		<title>Home | UPLOAD online shop</title>
+		<title>カート | UPLOAD online shop</title>
+		<link href="https://fonts.googleapis.com/earlyaccess/notosansjapanese.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 		<link href="css/reset.css" rel="stylesheet" type="text/css">
 		<link href="css/common.css" rel="stylesheet" type="text/css">
 		<link href="css/main.css" rel="stylesheet" type="text/css">
-		<link href="css/sideBar.css" rel="stylesheet" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="js/common.js"></script>
 		<script src="js/main.js"></script>
 	</head>
 	<body>
 		<header>
-			<div class="headerTopDiv">
-				<div class="headerSearchDiv">
-					<input type="text" class="searchText"/>
-					<input type="button"  class="searchButton" value="search"/>
-				</div>
-				<div class="headerCartDiv">
-					<a href="cart.html">
-						<img class="cartIcon" src="img/cart.png" alt="カートを見る">
-						<span class="minicartQuantity">0</span>
-					</a>
-				</div>
-			</div>
-			<h2 class="primaryLogo">
-				<a href="main.html" title="UPLOAD online shop ホーム">
-					<img class="topIcon" src="img/logo_m.png" alt="topに戻る">
-				</a>
-			</h2>
+			<header-content v-bind:items="cartItems"></header-content>
+			<logo-content></logo-content>
 		</header>
-		<div class="center">
+		<div id="container" class="center">
 			<ul id="cartList" style="display:none;">
-				<script>
-					window.addEventListener('load',function(){
-						getCartList();
-					},false);
-				</script>
 				<li>
-					<table id="cartTable">
-						<thead>
-							<tr>
-								<th class="section-header">商品</th>
-								<th class="section-header"></th>
-								<th class="section-header">価格</th>
-								<th class="section-header"></th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
+					<cart-table v-bind:product="param.jsonData" v-bind:list="param.cartList"></cart-table>
 				</li>
 				<li>
 					<form action="result.html" class="summaryForm">
-						<input class="buyButton" type="submit" value="購入する"/>
+						<input type="submit" value="購入する" class="button">
 					</form>
 				</li>
 			</ul>
 		</div>
 		<footer>
-			<div class="footerInnerDiv">
-				<ul class="links">
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/" target="_blank">UPLOAD 公式HP</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/privacy.html" target="_blank">プライバシーポリシー</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/outline.html" target="_blank">会社概要</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/outline.html#contact" target="_blank">お問い合わせ</a></li>
-				</ul>
-			</div>
+			<footer-content></footer-content>
 		</footer>
+		<script>
+			$(function() {
+				if(cartItems.length > 0){
+					Vue.set(data.param, 'jsonData', data.json.product);
+					Vue.set(data.param, 'cartList', cartItems);
+					$("#cartList").css("display", "block");
+				}else{
+					$("#cartList").before('<h2>カートは空です。</h2><a href="productList.html">商品一覧へ</a>');
+				}
+			});
+		</script>
 	</body>
 </html>

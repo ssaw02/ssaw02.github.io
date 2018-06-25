@@ -2,110 +2,43 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
-		<title>Home | UPLOAD online shop</title>
+		<title>商品詳細 | UPLOAD online shop</title>
+		<link href="https://fonts.googleapis.com/earlyaccess/notosansjapanese.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 		<link href="css/reset.css" rel="stylesheet" type="text/css">
 		<link href="css/common.css" rel="stylesheet" type="text/css">
 		<link href="css/main.css" rel="stylesheet" type="text/css">
-		<link href="css/sideBar.css" rel="stylesheet" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="js/common.js"></script>
 		<script src="js/main.js"></script>
 	</head>
 	<body>
 		<header>
-			<div class="headerTopDiv">
-				<div class="headerSearchDiv">
-					<input type="text" class="searchText"/>
-					<input type="button"  class="searchButton" value="search"/>
-				</div>
-				<div class="headerCartDiv">
-					<a href="cart.html">
-						<img class="cartIcon" src="img/cart.png" alt="カートを見る">
-						<span class="minicartQuantity">0</span>
-					</a>
-					<div class="minicartContent" style="display:none;">
-						<h3 class="mini-cart-header">ショッピングバッグ</h3>
-						<ul class="minicartProducts">
-							<li class="minicartProduct">
-								<div class="minicartImage">
-									<img src="https://image.mix.tokyo/017/8230670/0178230670-040_MAIN_360.jpg" alt="ツイルワイドパンツ" title="ツイルワイドパンツ">
-								</div>
-								<div class="mini-cart-name">
-									<a href="https://store.saneibd.com/all/nbb/nbb-bottoms/nbb-bottoms-pants/0178230670XS040.html" title="次の商品に移動する: ツイルワイドパンツ">
-										<span class="display-brand-name">商品名:</span>
-										<span class="display-brand-name">ツイルワイドパンツ</span>
-									</a>
-								</div>
-								<div class="mini-cart-attributes">
-									<div class="attribute" data-attribute="color">
-										<span class="label">Color:</span><span class="value">ベージュ</span>
-									</div>
-									<div class="attribute" data-attribute="size">
-										<span class="label">Size:</span><span class="value">XS</span>
-									</div>
-								</div>
-								<div class="mini-cart-pricing">
-									<span class="label">数量:</span>
-									<span class="value">1</span>
-									<span class="mini-cart-price">¥ 7,000</span>
-								</div>
-							</li>
-						</ul>
-						<div class="mini-cart-totals">
-							<div class="mini-cart-subtotals">
-								<span class="label">ご注文金額小計</span>
-								<span class="value">¥ 7,000</span>
-							</div>
-							<a class="button mini-cart-link-cart" href="https://store.saneibd.com/cart" title="ショッピングバッグに移動する">ショッピングバッグを見る</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<h2 class="primaryLogo">
-				<a href="main.html" title="UPLOAD online shop ホーム">
-					<img class="topIcon" src="img/logo_m.png" alt="topに戻る">
-				</a>
-			</h2>
+			<header-content v-bind:items="cartItems"></header-content>
+			<logo-content></logo-content>
 		</header>
-		<div class="center">
+		<div id="container" class="center">
 			<ul id="productDetail" style="display:none;">
-				<script>
-					window.addEventListener('load',function(){
-						var pid = "";
-						var apeendId = "productDetail";
-						var params = window.location.search;
-						if(params.indexOf("productId=") > -1){
-							pid = params.substr(params.indexOf("productId") + 10, 8);
-						}
-
-						if(pid != ""){
-							getProductDetali(pid, apeendId);
-						}else{
-							$("#" + apeendId).before("<h2>商品が見つかりませんでした。</h2>");
-						}
-					},false);
-				</script>
-				<li class='detail2'>
-	      	<div id='sizeArea'>
-						<h2>Size</h2>
-					</div>
-	      	<div id='addCartArea'>
-						<input type="hidden" id="pid" value="" />
-	      		<button id='addToCart' type='submit' title='ADD TO CART' value='ADD TO CART' class='button' disabled>
-							<span>ADD TO CART</span>
-						</button>
-	      	</div>
-	      </li>
+				<product-detail v-if="param.pid" v-bind:product="json.product[param.pid]"></product-detail>
+				<product-detail-content v-if="param.pid" v-bind:product="json.product[param.pid]"></product-detail-content>
 			</ul>
 		</div>
+		<input type="button" onclick="window.sessionStorage.removeItem(['cart']); window.location.reload();" value="Clear">
 		<footer>
-			<div class="footerInnerDiv">
-				<ul class="links">
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/" target="_blank">UPLOAD 公式HP</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/privacy.html" target="_blank">プライバシーポリシー</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/outline.html" target="_blank">会社概要</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/outline.html#contact" target="_blank">お問い合わせ</a></li>
-				</ul>
-			</div>
+			<footer-content></footer-content>
 		</footer>
+		<script>
+			$(function() {
+				var searchParam = window.location.search;
+				var index = searchParam.indexOf("productId=");
+				if(index > -1){
+					Vue.set(data.param, 'pid', searchParam.substr(index + 10, 8));
+					$("#productDetail").css("display", "block");
+				}else{
+					$("#productDetail").before("<h2>商品が見つかりませんでした。</h2>");
+				}
+			});
+		</script>
 	</body>
 </html>

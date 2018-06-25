@@ -2,11 +2,11 @@
 @charset "UTF-8";
 
 body {
-	font-family:'Lato', 'Noto Sans Japanese', '游ゴシック Medium', '游ゴシック体', 'Yu Gothic Medium', YuGothic, 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+  font-family:'Lato', 'Noto Sans Japanese', '游ゴシック Medium', '游ゴシック体', 'Yu Gothic Medium', YuGothic, 'ヒラギノ角ゴ ProN', 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
 }
 a {
-	color: #222;
-	display: block;
+  color: #222;
+  display: block;
 }
 .arrow::before ,
 .arrow::after {
@@ -19,58 +19,66 @@ a {
   vertical-align: middle;
 }
 .arrow_right-right::before {
-	right: 0;
+  right: 0;
   width: 6px;
   height: 6px;
   transform: rotate(45deg);
 }
-
 .mainContent img {
-	width: 100%;
+  width: 100%;
 }
 .mainContent p {
-	text-align: right;
+  text-align: right;
 }
 .searchContent {
-	border-top:1px #ccc solid;
-	border-bottom:1px #ccc solid;
+  border-top:1px #ccc solid;
+  border-bottom:1px #ccc solid;
 }
 .productList li {
-	display: inline-block;
-	width: 50%;
-	margin-bottom: 10px;
+  display: inline-block;
+  width: 50%;
+  margin-bottom: 10px;
 }
 @media (min-width: 769px) {
-	.productList li {
-		width: 25%;
-	}
+  .productList li {
+    width: 25%;
+  }
 }
 .productList li a img {
-	width: 100%;
+  width: 100%;
 }
-
 .center {
-	margin: 10px;
-	text-align: center;
-	max-width: 1280px;
+  margin: 10px;
+  text-align: center;
+  max-width: 1280px;
 }
 @media (min-width: 769px) {
-	.center {
-		margin: 10px auto;
-	}
+  .center {
+    margin: 10px auto;
+  }
 }
-
 .title {
-	font-size: 24px;
-	padding: 10px 0;
-	text-align: center;
+  font-size: 24px;
+  padding: 10px 0;
+  text-align: center;
 }
-
 .content {
-	margin-bottom: 40px;
-	padding-bottom: 10px;
+  margin-bottom: 40px;
+  padding-bottom: 10px;
+}
+.button {
+  border-radius:5px;
+  cursor: pointer;
+  display: block;
+  border: 0;
+  background: #000;
+  width: 200px;
+  height: 50px;
+  color: #FFF;
+  letter-spacing: .1em;
 }
 
+/* ProductDetail page */
 #sizeArea {
   padding: 20px 10px;
 }
@@ -81,8 +89,8 @@ a {
   margin-right: 25px;
   width: 20px;
   height: 20px;
-	text-decoration-line: none;
-	-webkit-transition: all 600ms cubic-bezier(.165,.84,.44,1);
+  text-decoration-line: none;
+  -webkit-transition: all 600ms cubic-bezier(.165,.84,.44,1);
   transition: all 600ms cubic-bezier(.165,.84,.44,1);
 }
 #sizeArea a:last-child {
@@ -92,21 +100,10 @@ a {
   font-size: 20px;
 }
 #sizeArea a.selected {
-	background-color: #999;
+  background-color: #999;
 }
 #sizeArea a.selected span.value {
-	color: #FFF;
-}
-.button {
-	border-radius:5px;
-  cursor: pointer;
-  display: block;
-  border: 0;
-  background: #000;
-  width: 200px;
-  height: 50px;
-	color: #FFF;
-  letter-spacing: .1em;
+  color: #FFF;
 }
 #addToCart {
   width: 300px;
@@ -120,14 +117,51 @@ a {
   background-color: #dbdbdb;
 }
 
-#cartTable {
-  white-space: nowrap;
+/* Cart page */
+#cartList li {
+  margin-bottom: 30px;
+}
+#cartTable thead {
+  display: none;
 }
 #cartTable th,
 #cartTable td {
   padding: 10px;
-	vertical-align: middle;
+  vertical-align: middle;
 }
-#cartTable td img {
-  width: 40%;
+#cartTable td {
+  width: 44%;
+  float: right;
+}
+#cartTable td.itemImage {
+  float: left;
+}
+#cartTable td.itemImage img {
+  width: 100%;
+}
+@media (min-width: 769px) {
+  #cartTable {
+    white-space: nowrap;
+	margin: auto;
+	max-width: 1000px;
+  }
+  #cartTable thead {
+    display: table-row-group;
+	text-align: left;
+  }
+  #cartTable td.productName {
+    width: 35%;
+  }
+  #cartTable td.itemImage {
+    width: 20%;
+  }
+  #cartTable td {
+    width: 15%;
+  }
+  #cartTable tbody tr.cartRow td {
+    float: none;
+  }
+}
+#cartList .summaryForm input {
+  margin: auto;
 }

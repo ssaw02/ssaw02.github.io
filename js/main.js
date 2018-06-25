@@ -1,191 +1,69 @@
-var data = {};
-var cartItems = [];
+Vue.component('product-list', {
+  props: ['product'],
+  template: '<li :id="product.ID"><a :href="product.url"><img :src="product.imageUrl"><div class="productName">{{product.name}}</div><div class="productPrice">{{product.price}}</div></a></li>'
+});
+
+Vue.component('product-detail', {
+  props: ['product'],
+  template: '<li class="detail1"><img :src="product.imageUrl"><div class="productName">{{product.name}}</div><div class="productPrice">{{product.price}}</div></li>'
+});
+
+var sizeContent = Vue.extend({
+  props: ['variation'],
+  template: '<div id="sizeArea"><h2>Size</h2><a v-for="(val, key) in variation" href="javascript:void(0)"><span class="value">{{val.size}}</span></a></div>'
+});
+var addCartContent = Vue.extend({
+  props: ['pid'],
+  template: '<div id="addCartArea"><input type="hidden" id="pid" :value="pid" /><button id="addToCart" type="submit" title="ADD TO CART" value="ADD TO CART" class="button" disabled><span>ADD TO CART</span></button></div>'
+});
+var productContent = Vue.extend({
+  props: ['product'],
+  template: '<li class="detail2"><size-content v-bind:variation=product.variation></size-content><add-cart-content :pid=product.ID></add-cart-content></li>',
+  components: {
+    'size-content': sizeContent,
+    'add-cart-content': addCartContent
+  }
+});
+Vue.component('product-detail-content', productContent);
+
+var cartTr = Vue.extend({
+  props: ['item'],
+  template: '<tr class="cartRow"><td class="itemImage"><a :href="item.url"><img :src="item.imageUrl"></a></td><td class="productName"><span>{{item.name}}</span></td><td class="productPrice"><span>\{{item.price}}</span></td><td class="productDelete"><a href="javascript:void(0)"><span>削除</span></a><input class="hiddenPid" type="hidden" :value="item.ID"></td></tr>'
+});
+var cartTable = Vue.extend({
+  props: {
+    'list': Array,
+    'product': Object
+  },
+  template: '<table id="cartTable"><thead><tr><th colspan="2">商品</th><th>価格</th><th><!-- deleteBtn --></th></tr></thead><tbody><cart-tr v-for="pid in list" :key="pid" v-bind:item="product[pid]"></cart-tr></tbody></table>',
+  components: {
+    'cart-tr': cartTr
+  }
+});
+Vue.component('cart-table', cartTable);
 
 $(function() {
 
-  $.ajaxSetup({async: false});
-  // https://dl.dropboxusercontent.com/s/230jd5l2ja1wutr/data.json
-  $.getJSON("data.json" , function(jsonData) {
-    data = jsonData;
-  })
-  .success(function(json) {
-      console.log("成功");
-  })
-  .error(function(jqXHR, textStatus, errorThrown) {
-      console.log("エラー：" + textStatus);
-      console.log("テキスト：" + jqXHR.responseText);
-  })
-  .complete(function() {
-      console.log("完了");
-  });
-  $.ajaxSetup({async: true});
-
-  /* Set items in the header cart */
-  setCartItem();
-
   /* productDetail Size Click Event */
-  $("#addToCart").on("click", function () {
-    console.log("addToCart Click");
-    $(".headerCartDiv a span.minicartQuantity").addClass("active");
-    var quantity = $(".headerCartDiv a span.minicartQuantity").text();
-    var cartItem = $("input#cartItem").val();
-    if(cartItem != "" && cartItem != null){
-      cartItem = cartItem + "," + $("input#pid").val() + $("#sizeArea a.selected span.value").text();
-    }else{
-      cartItem = $("input#pid").val() + $("#sizeArea a.selected span.value").text();
+  $(document).on("click", "#sizeArea a", function () {
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      $("#addToCart").attr("disabled", "disabled");
+      return;
     }
-    $(".headerCartDiv a span.minicartQuantity").text(Number(quantity)+1);
-    window.sessionStorage.setItem(['cart'],[cartItem]);
+
+    $("#addToCart").removeAttr("disabled");
+    $(this).closest("#sizeArea").find("a").removeClass('selected');
+    $(this).addClass("selected");
+  });
+
+  /* productDetail addToCart Click Event */
+  $(document).on("click", "#addToCart", function () {
+    console.log("addToCart Click");
+    cartItems.unshift($("input#pid").val());
+    head.cartItems.unshift(data.json.product[$("input#pid").val()]);
+    window.sessionStorage.setItem(['cart'],[cartItems]);
+    minicart.show();
   });
 
 });
-
-function setCartItem(){
-    cartItems = window.sessionStorage.getItem(['cart']);
-    if(cartItems == null){
-      return false;
-    }else{
-      cartItems = cartItems.split(",");
-    }
-    $(".headerCartDiv a").append("<input type='hidden' id='cartItem' value='" + cartItems + "'/>");
-    if(cartItems.length > 0){
-      $(".headerCartDiv a span.minicartQuantity").addClass("active");
-      $(".headerCartDiv a span.minicartQuantity").text(cartItems.length);
-    }
-}
-
-function allProduct(appendId){
-    var appendArea = $("#" + appendId);
-    var productList = data.product;
-    if(appendArea.length == 0 || productList.length == 0){
-      return false;
-    }
-    var str = "";
-    for( var i=0; i < productList.length; i++) {
-      str = str +
-      "<li id='" + productList[i].ID + "'>" +
-      "<a href='productDetails.html?productId=" + productList[i].ID + "'>" +
-      "<img src='img/product/" + productList[i].ID + ".jpeg' alt='サンプル'>" +
-      "<div class='productName'>" + productList[i].name + "</div>" +
-      "<div class='productPrice'>￥" + productList[i].price + "</div>" +
-      "</a>" +
-      "</li>";
-    }
-    appendArea.append(str);
-}
-
-function getProductDetali(productId, appendId){
-    var appendArea = $("#" + appendId);
-    var productList = data.product;
-    if(appendArea.length == 0 || productList.length == 0){
-      return false;
-    }
-    var str = "";
-    var sizeStr = "";
-    for( var i=0; i < productList.length; i++) {
-      if(productId != productList[i].ID){
-        continue;
-      }
-      for(var j=0; j < productList[i].size.length; j++){
-        sizeStr = sizeStr + "<a href='javascript:void(0)'><span class='value'>" + productList[i].size[j] + "</span></a>";
-      }
-
-      str = str +
-      "<li class='detail1'>" +
-      "<img src='img/product/" + productList[i].ID + ".jpeg' alt='サンプル'>" +
-      "<div class='productName'>" + productList[i].name + "</div>" +
-      "<div class='productPrice'>" + productList[i].price + "</div>" +
-      "</li>";
-
-      break;
-    }
-    appendArea.find("#sizeArea").append(sizeStr);
-    appendArea.find(".detail2").before(str);
-    appendArea.css("display", "block")
-
-    $("input#pid").val(productId);
-
-    /* productDetail Size Click Event */
-    $("#sizeArea a").on("click", function () {
-      if ($(this).hasClass("selected")) {
-        $(this).removeClass("selected");
-        $("#addToCart").attr("disabled", "disabled");
-        return;
-      }else{
-        $("#addToCart").removeAttr("disabled");
-      }
-      $(this).closest("#sizeArea").find("a").removeClass('selected');
-  		$(this).addClass("selected");
-    });
-}
-
-function recommendProduct(productIdList, appendId){
-    var appendArea = $("#" + appendId);
-    var productList = data.product;
-    if(appendArea.length == 0 || productList.length == 0){
-      return false;
-    }
-    var str = "";
-    for( var i=0; i < productList.length; i++) {
-      if(productIdList.indexOf(productList[i].ID) == -1){
-        continue;
-      }
-      str = str +
-      "<li id='" + productList[i].ID + "'>" +
-      "<a href='productDetails.html?productId=" + productList[i].ID + "'>" +
-      "<img src='img/product/" + productList[i].ID + ".jpeg' alt='サンプル'>" +
-      "<div class='productName'>" + productList[i].name + "</div>" +
-      "<div class='productPrice'>" + productList[i].price + "</div>" +
-      "</a>" +
-      "</li>";
-    }
-    appendArea.append(str);
-}
-
-function getCartList(){
-    var appendArea = $("#cartList");
-    var productList = data.product;
-    cartItems = window.sessionStorage.getItem(['cart']);
-    if(cartItems == null){
-      $(appendArea).before("<h2>カートは空です。</h2>");
-      return false;
-    }else{
-      cartItems = cartItems.split(",");
-    }
-    var str = "";
-    for( var i=0; i < cartItems.length; i++) {
-      for( var j=0; j < productList.length; j++) {
-        if(cartItems[i].indexOf(productList[j].ID) == -1){
-          continue;
-        }
-        str = str +
-        "<tr class='cartRow'>" +
-        "<td class='itemImage'>" +
-        "<a href='productDetails.html?productId=" + productList[j].ID + "'>" +
-        "<img src='img/product/" + productList[j].ID + ".jpeg' alt='サンプル'>" +
-        "</a>" +
-        "</td>" +
-        "<td class='productName'>" + productList[j].name + "</td>" +
-        "<td class='productPrice'>"  + productList[j].price + "</td>" +
-        "<td class='productDelete'>" +
-        "<a href='javascript:void(0)'><span>削除</span></a>" +
-        "<input class='hiddenPid' type='hidden' value='" + cartItems[i] + "'>" +
-        "</td>" +
-        "</tr>";
-      }
-    }
-    appendArea.find("#cartTable tbody").append(str);
-    appendArea.css("display", "block")
-    console.log($('.hiddenPid'));
-
-    /* cartTable delete Click Event */
-    $(".productDelete a").on("click", function () {
-      var pos = cartItems.indexOf($(this).closest("td").find(".hiddenPid").val());
-      cartItems.splice(pos, 1);
-      window.sessionStorage.removeItem(['cart']);
-      if(cartItems.length > 0){
-        window.sessionStorage.setItem(['cart'],[cartItems]);
-      }
-      window.location.reload();
-    });
-}

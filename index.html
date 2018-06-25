@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8"/>
@@ -8,32 +8,18 @@
 		<link href="css/reset.css" rel="stylesheet" type="text/css">
 		<link href="css/common.css" rel="stylesheet" type="text/css">
 		<link href="css/main.css" rel="stylesheet" type="text/css">
-		<link href="css/sideBar.css" rel="stylesheet" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="js/common.js"></script>
 		<script src="js/main.js"></script>
 	</head>
 	<body>
 		<header>
-			<div class="headerTopDiv">
-				<div class="headerSearchDiv">
-					<input type="text" class="searchText"/>
-					<input type="button"  class="searchButton" value="search"/>
-				</div>
-				<div class="headerCartDiv">
-					<a href="cart.html">
-						<img class="cartIcon" src="img/cart.png" alt="カートを見る">
-						<span class="minicartQuantity">0</span>
-					</a>
-				</div>
-			</div>
-			<h2 class="primaryLogo">
-				<a href="main.html">
-					<img class="topIcon" src="img/logo_m.png" title="UPLOAD online shop ホーム" alt="topに戻る">
-				</a>
-			</h2>
+			<header-content v-bind:items="cartItems"></header-content>
+			<logo-content></logo-content>
 		</header>
 
-		<div class="center">
+		<div id="container" class="center">
 			<div class="mainContent content">
 				<a href="productList.html">
 					<img src="img/bnr1.jpeg" title="商品一覧へ" alt="商品一覧へ">
@@ -42,24 +28,18 @@
 			</div>
 			<div class="searchContent content">
 				<h2 class="title">RECOMMEND ITEMS</h2>
-				<ul id="mainList1" class="productList">
-					<script>
-						window.addEventListener('load',function(){
-							recommendProduct(["08010001","06020001","01040001","09030001"], "mainList1");
-						},false);
-					</script>
+				<ul class="productList">
+					<product-list v-for="productId in param.recommendList1" :key="productId" v-bind:product="json.product[productId]"></product-list>
 				</ul>
 			</div>
 		</div>
+		<script>
+			$(function() {
+				Vue.set(data.param, 'recommendList1', ["06020001","10010003","03032003","03032004"]);
+			});
+		</script>
 		<footer>
-			<div class="footerInnerDiv">
-				<ul class="links">
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/" target="_blank">UPLOAD 公式HP</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/privacy.html" target="_blank">プライバシーポリシー</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/outline.html" target="_blank">会社概要</a></li>
-					<li><a class="arrow arrow_right-right" href="https://www.upload-gp.co.jp/outline.html#contact" target="_blank">お問い合わせ</a></li>
-				</ul>
-			</div>
-	  </footer>
+			<footer-content></footer-content>
+		</footer>
 	</body>
 </html>
